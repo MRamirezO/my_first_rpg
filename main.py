@@ -1,12 +1,15 @@
 import sys, pygame
 from settings import *
 from player import *
+from background import *
 pygame.init()
 
 FramePerSec = pygame.time.Clock()
 size = SCREEN_WIDTH, SCREEN_HEIGHT
 
 screen = pygame.display.set_mode(size)
+
+background = Background('sprites/bg_grass.png', [0,0])
 
 P1 = Player()
 
@@ -15,9 +18,11 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+
     P1.update()
      
-    screen.fill(GREEN)
+    screen.fill(BLUE)
+    background.draw(screen)
     P1.draw(screen)
          
     pygame.display.update()
