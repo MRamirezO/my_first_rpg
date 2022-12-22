@@ -13,7 +13,7 @@ class Enemy(pygame.sprite.Sprite):
         super().__init__() 
         self.image = pygame.image.load("sprites/enemy.png")
         self.rect = self.image.get_rect()
-        self.rect.center= (160, 520)
+        self.rect.center= (600, 600)
         self.direction = MOVE_RIGHT
         self.idle_frame_start = time.time()
         self.turn_time = time.time()
