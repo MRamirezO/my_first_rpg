@@ -12,11 +12,15 @@ class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__() 
         self.image = pygame.image.load("sprites/enemy.png")
+        self.name = "Tony Rapon"
         self.rect = self.image.get_rect()
-        self.rect.center= (600, 600)
+        self.rect.center= (50, 50)
         self.direction = MOVE_RIGHT
         self.idle_frame_start = time.time()
+        self.health = 100
         self.turn_time = time.time()
+        self.attack = random.randint(1,100)
+        self.defense = random.randint(1,100)
 
     def move(self):
         if self.direction == MOVE_RIGHT:

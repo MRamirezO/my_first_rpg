@@ -4,44 +4,54 @@ from player import *
 from background import *
 from enemy import *
 from pygame import mixer
-
-pygame.init()
+from scenes import *
 
 FramePerSec = pygame.time.Clock()
 size = SCREEN_WIDTH, SCREEN_HEIGHT
 
 screen = pygame.display.set_mode(size)
 
-background = Background('sprites/bg_grass.png', [0,0])
-
 mixer.init()
-mixer.music.load('music/map_theme.mp3')
-mixer.music.play(-1)
-enemy_hit = pygame.mixer.Sound("sfx/die.wav")
+enemy_hit = mixer.Sound("sfx/die.wav")
 
 P1 = Player()
-E1 = Enemy()
+
+battle_scene = None
+
+world_scene = WorldMap(P1)
+
+current_scene = world_scene
+
+game_status = WORLD_MAP
 
 while True:
-    for event in pygame.event.get():              
+    events = pygame.event.get()
+    for event in events:   
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
 
-    P1.update()
-    E1.move()
+    if game_status not in (BATTLE, STORY, MENU):
+        if pygame.sprite.collide_rect(P1, current_scene.E1):
+            game_status = BATTLE
+            P1.status = FIGHTING
+            mixer.music.stop()
+            del(world_scene)
+            battle_scene = BattleScene(P1,current_scene.E1)
+            current_scene = battle_scene
+            
+            current_scene.enemy.rect.center = (600, 520)
+    if game_status == BATTLE:
+        if P1.health <= 0:
+            game_status = GAME_OVER
+        elif current_scene.enemy.health <= 0:
+            game_status = WORLD_MAP
+            del(battle_scene)
+            world_scene = WorldMap(P1)
+            current_scene = world_scene
      
-    screen.fill(BLUE)
-    background.draw(screen)
-    P1.draw(screen)
-    E1.draw(screen)
-
-    if pygame.sprite.collide_rect(P1, E1):
-        mixer.music.stop()
-        enemy_hit.play()
-        time.sleep(5)
-        pygame.quit()
-        sys.exit()      
-         
+    current_scene.update(events)           
+    current_scene.draw(screen)
+        
     pygame.display.update()
     FramePerSec.tick(FPS)

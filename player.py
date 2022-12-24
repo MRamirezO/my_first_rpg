@@ -11,7 +11,13 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = (160, 520)
         self.idle_frame_start = time.time()
         self.direction = "down"
+        self.health = 100
+        self.magic = 100
+        self.level = 1
+        self.attack = 50
+        self.defense = 50
         self.walk_frame = 1
+        self.status = EXPLORING
  
     def update(self):
         pressed_keys = pygame.key.get_pressed()
