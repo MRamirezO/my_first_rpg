@@ -54,7 +54,7 @@ class BattleScene:
         mixer.music.play(-1)
         self.dialog = Dialog(500,60,[f"A wild {self.enemy.name} appeared!"])
         self.actions = Menu(60,400,[ATTACK,MAGIC,DEFEND,RUN])
-        self.info = Dialog(1100,600,[f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+        self.info = Dialog(1100,600,[f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
         self.enemy_info = Dialog(1000,10,[f"Enemy HP: {self.enemy.health}"])
 
 
@@ -73,7 +73,7 @@ class BattleScene:
             self.dialog.update_text(["Choose an action..."])
         elif self.player.status == ATTACKING:
             self.dialog.update_text(["Player is attacking!"])
-            hit_points = random.randint(1,self.player.attack)
+            hit_points = random.randint(1,self.player.attack) * self.player.level
             self.dialog.update_text([f"Enemy hit by {hit_points}!"])
             self.enemy.health -= hit_points
             self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
@@ -89,25 +89,25 @@ class BattleScene:
             # self.player.magic -= 5
             # self.enemy.health -= hit_points
             # self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
-            self.info.update_text([f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+            self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
             # self.player.status = WAITING
         elif self.player.status == DEFENDING:
             self.dialog.update_text(["Player is defending!"])
             self.dialog.update_text(["Enemy is attacking!"])
-            hit_points = random.randint(1,5)
+            hit_points = random.randint(1,5) * self.player.level
             self.dialog.update_text([f"Player hit by {hit_points}!"])
             self.player.health -= hit_points
-            self.info.update_text([f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+            self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
             self.player.status = FIGHTING
         elif self.player.status == RUNNING:
             self.dialog.update_text(["Player is trying to run from enemy!"])
             self.enemy.health = 0
         elif self.player.status == WAITING:
             self.dialog.update_text(["Enemy is attacking!"])
-            hit_points = random.randint(1,20)
+            hit_points = random.randint(1,20) * self.enemy.level
             self.dialog.update_text([f"Player hit by {hit_points}!"])
             self.player.health -= hit_points
-            self.info.update_text([f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+            self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
             self.player.status = FIGHTING
 
 class Fader:

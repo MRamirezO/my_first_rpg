@@ -88,12 +88,15 @@ class Menu(Dialog):
                         elif self.options[self.option - 1] == RUN:
                             player.status = RUNNING
                     elif player.status == CASTING:
-                        if player.spells[self.option - 1].name == "Heal":
-                            player.health += player.spells[self.option - 1].points
-                            player.status = WAITING
-                        elif player.spells[self.option - 1].name == "Fireball":
-                            player.attack = player.spells[self.option - 1].points
-                            player.status = ATTACKING
-                        player.magic -= player.spells[self.option - 1].cost
+                        if player.spells[self.option - 1].cost <= player.magic:
+                            if player.spells[self.option - 1].name == "Heal":
+                                player.health += player.spells[self.option - 1].points
+                                player.status = WAITING
+                            elif player.spells[self.option - 1].name == "Fireball":
+                                player.attack = player.spells[self.option - 1].points
+                                player.status = ATTACKING
+                            player.magic -= player.spells[self.option - 1].cost
+                        else:
+                            player.status = FIGHTING
                         self.update_text([ATTACK,MAGIC,DEFEND,RUN])
                     self.option = 1

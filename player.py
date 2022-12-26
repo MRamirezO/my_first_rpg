@@ -19,6 +19,8 @@ class Player(pygame.sprite.Sprite):
         self.attack = 20
         self.defense = 50
         self.walk_frame = 1
+        self.next_level = 10
+        self.exp = 0
         self.status = EXPLORING
  
     def update(self):
@@ -65,7 +67,20 @@ class Player(pygame.sprite.Sprite):
                 self.walk_frame = 1
             self.idle_frame_start = time.time()
         
-        
+    def get_experience(self, enemy):
+        earned = enemy.exp
+
+        while True:
+            print(self.exp)
+            left = self.next_level - self.exp
+            if earned >= left:
+                self.level += 1
+                self.next_level = self.next_level * 2
+                earned -= left
+                self.exp = 0
+            else:
+                self.exp += earned
+                break
 
  
     def draw(self, surface):

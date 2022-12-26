@@ -48,6 +48,7 @@ while True:
             pygame.quit()
             sys.exit()
         elif current_scene.enemy.health <= 0:
+            P1.get_experience(current_scene.enemy)
             game_status = WORLD_MAP
             P1.status = EXPLORING
             del(battle_scene)

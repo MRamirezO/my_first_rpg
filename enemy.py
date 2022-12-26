@@ -21,6 +21,8 @@ class Enemy(pygame.sprite.Sprite):
         self.turn_time = time.time()
         self.attack = random.randint(1,100)
         self.defense = random.randint(1,100)
+        self.level = 1
+        self.exp = 20
 
     def move(self):
         if self.direction == MOVE_RIGHT:
