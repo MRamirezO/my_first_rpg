@@ -25,6 +25,7 @@ ATTACKING = "ATTACKING"
 CASTING = "CASTING"
 DEFENDING = "DEFENDING"
 RUNNING = "RUNNING"
+WAITING = "WAITING"
 
 # Menu options
 NEW_GAME = "New game"
@@ -56,3 +57,10 @@ FONT_TYPE = "Verdana"
 FONT_SMALL = 25
 FONT_LARGE = 55
 FONT_MEDIUM = 40
+
+# Attributes
+HEALTH = "Health"
+MAGIC = "Magic"
+DEFENSE = "Defense"
+SPEED = "Speed"
+ACCURACY = "Accuracy"

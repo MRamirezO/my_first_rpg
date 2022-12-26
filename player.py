@@ -1,6 +1,7 @@
 import pygame, time
 from pygame.locals import *
 from settings import *
+from magic import *
 
 
 class Player(pygame.sprite.Sprite):
@@ -10,11 +11,12 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (160, 520)
         self.idle_frame_start = time.time()
+        self.spells = [Spell("Fireball",HEALTH,50,8),Spell("Heal",HEALTH,20,5)]
         self.direction = "down"
         self.health = 100
         self.magic = 100
         self.level = 1
-        self.attack = 50
+        self.attack = 20
         self.defense = 50
         self.walk_frame = 1
         self.status = EXPLORING

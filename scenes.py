@@ -56,18 +56,42 @@ class BattleScene:
             self.dialog.update_text(["Choose an action..."])
         elif self.player.status == ATTACKING:
             self.dialog.update_text(["Player is attacking!"])
-            hit_points = random.randint(1,20)
+            hit_points = random.randint(1,self.player.attack)
             self.dialog.update_text([f"Enemy hit by {hit_points}!"])
-            self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
             self.enemy.health -= hit_points
-            self.player.status = FIGHTING
+            self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
+            self.player.attack = 20
+            self.player.status = WAITING
         elif self.player.status == CASTING:
             self.dialog.update_text(["Player is casting some magic!"])
+
+            self.actions.update_text([spell.name for spell in self.player.spells])
+
+            # hit_points = random.randint(1,40)
+            # self.dialog.update_text([f"Enemy hit by {hit_points}!"])
+            # self.player.magic -= 5
+            # self.enemy.health -= hit_points
+            # self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
+            self.info.update_text([f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+            # self.player.status = WAITING
         elif self.player.status == DEFENDING:
             self.dialog.update_text(["Player is defending!"])
+            self.dialog.update_text(["Enemy is attacking!"])
+            hit_points = random.randint(1,5)
+            self.dialog.update_text([f"Player hit by {hit_points}!"])
+            self.player.health -= hit_points
+            self.info.update_text([f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+            self.player.status = FIGHTING
         elif self.player.status == RUNNING:
             self.dialog.update_text(["Player is trying to run from enemy!"])
             self.enemy.health = 0
+        elif self.player.status == WAITING:
+            self.dialog.update_text(["Enemy is attacking!"])
+            hit_points = random.randint(1,20)
+            self.dialog.update_text([f"Player hit by {hit_points}!"])
+            self.player.health -= hit_points
+            self.info.update_text([f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+            self.player.status = FIGHTING
 
 class Fader:
 

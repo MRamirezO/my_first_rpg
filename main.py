@@ -44,6 +44,8 @@ while True:
     if game_status == BATTLE:
         if P1.health <= 0:
             game_status = GAME_OVER
+            pygame.quit()
+            sys.exit()
         elif current_scene.enemy.health <= 0:
             game_status = WORLD_MAP
             del(battle_scene)
