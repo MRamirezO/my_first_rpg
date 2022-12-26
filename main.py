@@ -39,8 +39,9 @@ while True:
             del(world_scene)
             battle_scene = BattleScene(P1,current_scene.E1)
             current_scene = battle_scene
-            
             current_scene.enemy.rect.center = (600, 520)
+
+            
     if game_status == BATTLE:
         if P1.health <= 0:
             game_status = GAME_OVER
@@ -48,6 +49,7 @@ while True:
             sys.exit()
         elif current_scene.enemy.health <= 0:
             game_status = WORLD_MAP
+            P1.status = EXPLORING
             del(battle_scene)
             world_scene = WorldMap(P1)
             current_scene = world_scene

@@ -4,7 +4,7 @@ from pygame.locals import *
 
 class Dialog(pygame.sprite.Sprite):
     
-    def __init__(self, x, y, texts, font=None):
+    def __init__(self, x, y, texts, font=None, name=None):
         super().__init__()
         self.option = 1
         self.font_texts = []
@@ -13,6 +13,9 @@ class Dialog(pygame.sprite.Sprite):
         self.font = font or pygame.font.SysFont(FONT_TYPE,FONT_SMALL)
         self.x = x
         self.y = y
+        self.name = name
+        if self.name:
+            texts.insert(0, self.name + ": ")
         for text in texts:
             font_text = self.font.render(text, True, WHITE)
             self.font_texts.append(font_text)
@@ -34,6 +37,8 @@ class Dialog(pygame.sprite.Sprite):
         self.font_texts = []
         self.width = 0
         self.height = 0
+        if self.name:
+            texts.insert(0, self.name + ": ")
         for text in texts:
             font_text = self.font.render(text, True, WHITE)
             self.font_texts.append(font_text)

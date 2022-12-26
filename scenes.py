@@ -4,6 +4,7 @@ from pygame import mixer
 from settings import *
 from misc import *
 from enemy import *
+from npc import *
 
 class Map:
     pass
@@ -11,6 +12,7 @@ class Map:
 class WorldMap:
     def __init__(self, player):
         self.E1 = Enemy()
+        self.NPC = NPC()
         self.background = Background('sprites/bg_grass.png', [0,0])
         self.player = player
         mixer.music.load('music/map_theme.mp3')
@@ -18,14 +20,29 @@ class WorldMap:
 
     def draw(self, screen):
         self.background.draw(screen)
-        # screen.fill(pygame.Color('lightblue'))
-        # self.clouds.draw(screen)
         self.E1.draw(screen)
+        self.NPC.draw(screen)
         self.player.draw(screen)
+        if self.NPC.dialog:
+            self.NPC.dialog.draw(screen)
 
-    def update(self,event):
-        self.player.update()
-        self.E1.move()
+    def update(self,events):
+        
+        if self.player.status == EXPLORING:
+            for event in events:
+                if event.type == pygame.KEYDOWN:
+                    if event.key==K_SPACE:
+                        if pygame.sprite.collide_rect(self.player, self.NPC):
+                            self.NPC.dialog = Dialog(500,60,[self.NPC.dialogs[self.NPC.dialog_index - 1]],name=self.NPC.name)
+                            self.player.status = TALKING
+            self.player.update()
+            self.E1.move()
+
+        elif self.player.status == TALKING:
+            self.NPC.talk(events)
+            if not self.NPC.dialog:
+                self.player.status = EXPLORING
+            
         # self.clouds.update(dt, events)
 
 class BattleScene:
