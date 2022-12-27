@@ -24,7 +24,31 @@ class Enemy(pygame.sprite.Sprite):
         self.level = 1
         self.exp = 20
 
-    def move(self):
+    def move(self,obstacles):
+
+        up, down, left, right = True, True, True, True
+        for obstacle in obstacles:
+            if pygame.sprite.collide_rect(self,obstacle):
+                if self.rect.top <= obstacle.rect.bottom and self.rect.bottom > obstacle.rect.bottom: # check if top collide
+                    up = False
+                if self.rect.right >= obstacle.rect.left and self.rect.left < obstacle.rect.left: # check if right collide
+                    right = False
+                if self.rect.left <= obstacle.rect.right and self.rect.right > obstacle.rect.right: # check if left collide
+                    left = False
+                if self.rect.bottom >= obstacle.rect.top and self.rect.top < obstacle.rect.top:
+                    down = False
+                break
+
+
+        if self.rect.right >= SCREEN_WIDTH or not right:        
+            self.direction = MOVE_LEFT
+        elif self.rect.left <= 0 or not left:
+            self.direction = MOVE_RIGHT
+        elif self.rect.bottom >= SCREEN_HEIGHT or not down:        
+            self.direction = MOVE_UP
+        elif self.rect.top <= 0 or not up:
+            self.direction = MOVE_DOWN
+
         if self.direction == MOVE_RIGHT:
             self.rect.move_ip(5, 0)
         elif self.direction == MOVE_LEFT:
@@ -33,16 +57,6 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.move_ip(0, -5)
         elif self.direction == MOVE_DOWN:
             self.rect.move_ip(0, 5)
-
-
-        if self.rect.right >= SCREEN_WIDTH:        
-            self.direction = MOVE_LEFT
-        if self.rect.left <= 0:
-            self.direction = MOVE_RIGHT
-        if self.rect.bottom >= SCREEN_HEIGHT:        
-            self.direction = MOVE_UP
-        if self.rect.top <= 0:
-            self.direction = MOVE_DOWN
         
         if time.time() - self.turn_time > 3.0: 
             self.direction = random.randint(1,4)

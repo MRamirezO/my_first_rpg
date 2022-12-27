@@ -9,7 +9,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__() 
         self.image = pygame.image.load("sprites/player_idle.png")
         self.rect = self.image.get_rect()
-        self.rect.center = (160, 520)
+        self.rect.topleft = (100, 520)
         self.idle_frame_start = time.time()
         self.spells = [Spell("Fireball",HEALTH,50,8),Spell("Heal",HEALTH,20,5)]
         self.direction = "down"
@@ -21,30 +21,48 @@ class Player(pygame.sprite.Sprite):
         self.walk_frame = 1
         self.next_level = 10
         self.exp = 0
+        self.talking_to = None
         self.status = EXPLORING
  
-    def update(self):
+    def update(self, obstacles):
+        up, down, left, right = True, True, True, True
         pressed_keys = pygame.key.get_pressed()
-        if self.rect.top > 0:
+        for obstacle in obstacles:
+            if pygame.sprite.collide_rect(self,obstacle):
+                if self.rect.top <= obstacle.rect.bottom and self.rect.bottom > obstacle.rect.bottom: # check if top collide
+                    up = False
+                    #self.rect.top = obstacle.rect.bottom + 5
+                if self.rect.right >= obstacle.rect.left and self.rect.left < obstacle.rect.left: # check if right collide
+                    right = False
+                    #self.rect.right = obstacle.rect.left - 5
+                if self.rect.left <= obstacle.rect.right and self.rect.right > obstacle.rect.right: # check if left collide
+                    left = False
+                    #self.rect.left = obstacle.rect.right + 5
+                if self.rect.bottom >= obstacle.rect.top and self.rect.top < obstacle.rect.top:
+                    down = False
+                    #self.rect.bottom = obstacle.rect.top - 5
+                break
+
+        if self.rect.top > 0 and up:
             if pressed_keys[K_UP]:
                     if self.direction != "up":
                         self.direction = "up"
                         self.image = pygame.image.load("sprites/player_back.png")
                     self.rect.move_ip(0, -5)
-        if self.rect.bottom < SCREEN_HEIGHT:
+        if self.rect.bottom < SCREEN_HEIGHT and down:
             if pressed_keys[K_DOWN]:
                     if self.direction != "down":
                         self.direction = "down"
                         self.image = pygame.image.load("sprites/player_idle.png")
                     self.rect.move_ip(0,5)
          
-        if self.rect.left > 0:
+        if self.rect.left > 0 and left:
             if pressed_keys[K_LEFT]:
                 if self.direction != "left":
                     self.direction = "left"
                     self.image = pygame.image.load("sprites/player_side_1.png")
                 self.rect.move_ip(-5, 0)
-        if self.rect.right < SCREEN_WIDTH:        
+        if self.rect.right < SCREEN_WIDTH and right:        
             if pressed_keys[K_RIGHT]:
                 if self.direction != "right":
                     self.direction = "right"
@@ -71,7 +89,6 @@ class Player(pygame.sprite.Sprite):
         earned = enemy.exp
 
         while True:
-            print(self.exp)
             left = self.next_level - self.exp
             if earned >= left:
                 self.level += 1

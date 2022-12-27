@@ -51,6 +51,7 @@ WHITE = (255, 255, 255)
 # Screen information
 SCREEN_WIDTH = 1280
 SCREEN_HEIGHT = 720
+TILE_SIZE = 96
 
 #Setting up Fonts
 FONT_TYPE = "Verdana"

@@ -12,15 +12,15 @@ MOVE_DOWN = 4
 
 class NPC(pygame.sprite.Sprite):
     dialog = None
-    def __init__(self):
+    def __init__(self, name, position, dialogs):
         super().__init__() 
         self.image = pygame.image.load("sprites/npc_1.png")
-        self.name = "Layo"
+        self.name = name
         self.rect = self.image.get_rect()
-        self.rect.center= (600, 600)
+        self.rect.topleft= position
         self.idle_frame_start = time.time()
         self.dialog_index = 1
-        self.dialogs = ["Hello there!","Soy Mexicano!"]
+        self.dialogs = dialogs
 
     def talk(self,events):
         for event in events:
