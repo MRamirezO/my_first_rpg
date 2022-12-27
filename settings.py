@@ -54,10 +54,10 @@ SCREEN_HEIGHT = 720
 TILE_SIZE = 96
 
 #Setting up Fonts
-FONT_TYPE = "Verdana"
-FONT_SMALL = 25
-FONT_LARGE = 55
-FONT_MEDIUM = 40
+FONT_TYPE = "fonts/eightbitmadness.ttf"
+FONT_SMALL = 60
+FONT_LARGE = 90
+FONT_MEDIUM = 70
 
 # Attributes
 HEALTH = "Health"
@@ -65,3 +65,9 @@ MAGIC = "Magic"
 DEFENSE = "Defense"
 SPEED = "Speed"
 ACCURACY = "Accuracy"
+
+# Battle stages
+CHOOSE = "CHOOSE"
+ANNOUNCE = "ANNOUNCE"
+PERFORM = "PERFORM"
+RESULT = "RESULT"

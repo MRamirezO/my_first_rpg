@@ -176,10 +176,10 @@ class BattleScene:
         mixer.music.stop()
         mixer.music.load('music/battle_theme.mp3')
         mixer.music.play(-1)
-        self.dialog = Dialog(500,60,[f"A wild {self.enemy.name} appeared!"])
-        self.actions = Menu(60,400,[ATTACK,MAGIC,DEFEND,RUN])
-        self.info = Dialog(1100,600,[f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
-        self.enemy_info = Dialog(1000,10,[f"Enemy HP: {self.enemy.health}"])
+        self.dialog = Dialog(400,60,[f"A wild {self.enemy.name} appeared!"])
+        self.actions = Menu(60,500,[ATTACK,MAGIC,DEFEND,RUN])
+        self.info = Dialog(1000,600,[f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+        self.enemy_info = Dialog(900,10,[f"Enemy HP: {self.enemy.health}"])
 
 
 

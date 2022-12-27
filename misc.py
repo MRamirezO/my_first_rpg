@@ -10,7 +10,7 @@ class Dialog(pygame.sprite.Sprite):
         self.font_texts = []
         self.width = 0
         self.height = 0
-        self.font = font or pygame.font.SysFont(FONT_TYPE,FONT_SMALL)
+        self.font = font or pygame.font.Font(FONT_TYPE,FONT_SMALL)
         self.x = x
         self.y = y
         self.name = name
@@ -48,7 +48,7 @@ class Dialog(pygame.sprite.Sprite):
 
 class Menu(Dialog):
     def __init__(self, x, y, texts):
-        super().__init__(x, y, texts, pygame.font.SysFont(FONT_TYPE,FONT_LARGE))
+        super().__init__(x, y, texts, pygame.font.Font(FONT_TYPE,FONT_LARGE))
         self.options = texts
 
     def draw(self, surface):
