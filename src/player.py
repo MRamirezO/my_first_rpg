@@ -11,7 +11,7 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.topleft = (100, 520)
         self.idle_frame_start = time.time()
-        self.spells = [Spell("Fireball",HEALTH,50,8),Spell("Heal",HEALTH,20,5)]
+        self.spells = [Spell("Fireball",HEALTH,-50,8),Spell("Heal",HEALTH,20,5)]
         self.direction = "down"
         self.health = 100
         self.magic = 100
@@ -23,6 +23,8 @@ class Player(pygame.sprite.Sprite):
         self.exp = 0
         self.talking_to = None
         self.status = EXPLORING
+        self.thinking = False
+        self.last_action = 0
  
     def update(self, obstacles):
         up, down, left, right = True, True, True, True

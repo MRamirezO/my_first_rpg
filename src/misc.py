@@ -78,10 +78,12 @@ class Menu(Dialog):
                     else:
                         self.option += 1
                 if event.key==K_SPACE:
+                    player.last_action = pygame.time.get_ticks()
                     if player.status == FIGHTING:
                         if self.options[self.option - 1] == ATTACK:
                             player.status = ATTACKING
                         elif self.options[self.option - 1] == MAGIC:
+                            player.thinking = True
                             player.status = CASTING
                         elif self.options[self.option - 1] == DEFEND:
                             player.status = DEFENDING
@@ -89,14 +91,9 @@ class Menu(Dialog):
                             player.status = RUNNING
                     elif player.status == CASTING:
                         if player.spells[self.option - 1].cost <= player.magic:
-                            if player.spells[self.option - 1].name == "Heal":
-                                player.health += player.spells[self.option - 1].points
-                                player.status = WAITING
-                            elif player.spells[self.option - 1].name == "Fireball":
-                                player.attack = player.spells[self.option - 1].points
-                                player.status = ATTACKING
-                            player.magic -= player.spells[self.option - 1].cost
+                            player.thinking = False
                         else:
+                            player.thinking = False
                             player.status = FIGHTING
-                        self.update_text([ATTACK,MAGIC,DEFEND,RUN])
-                    self.option = 1
+                            self.update_text([ATTACK,MAGIC,DEFEND,RUN])
+                    #self.option = 1

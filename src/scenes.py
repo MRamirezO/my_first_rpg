@@ -180,7 +180,11 @@ class BattleScene:
         self.actions = Menu(60,500,[ATTACK,MAGIC,DEFEND,RUN])
         self.info = Dialog(1000,600,[f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
         self.enemy_info = Dialog(900,10,[f"Enemy HP: {self.enemy.health}"])
-        self.stage = CHOOSE
+        self.stages = [CHOOSE,ANNOUNCE,PERFORM,RESULT]
+        self.stage = 1
+        self.delay = 3000   
+        self.hit_points = 0 
+        self.runaway = 0
 
 
 
@@ -193,47 +197,91 @@ class BattleScene:
         self.enemy.draw(screen)
 
     def update(self,event):
-        self.actions.update(event,self.player)
+        if self.player.thinking:
+            self.stage = 0
         if self.player.status == FIGHTING:
             self.dialog.update_text(["Choose an action..."])
+            self.actions.update(event,self.player)
         elif self.player.status == ATTACKING:
-            self.dialog.update_text(["Player is attacking!"])
-            hit_points = random.randint(1,self.player.attack) * self.player.level
-            self.dialog.update_text([f"Enemy hit by {hit_points}!"])
-            self.enemy.health -= hit_points
-            self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
-            self.player.attack = 20
-            self.player.status = WAITING
+            if self.stages[self.stage] == ANNOUNCE:
+                self.dialog.update_text(["Player is attacking!"])
+                self.hit_points = random.randint(1,self.player.attack) * self.player.level
+            elif self.stages[self.stage] == PERFORM:
+                self.dialog.update_text([f"Enemy hit by {self.hit_points}!"])
+            elif self.stages[self.stage] == RESULT:
+                self.enemy.health -= self.hit_points
+                self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
+                self.player.attack = 20
+                self.player.status = WAITING
+                self.stage = 1
         elif self.player.status == CASTING:
-            self.dialog.update_text(["Player is casting some magic!"])
-
-            self.actions.update_text([spell.name for spell in self.player.spells])
-
-            # hit_points = random.randint(1,40)
-            # self.dialog.update_text([f"Enemy hit by {hit_points}!"])
-            # self.player.magic -= 5
-            # self.enemy.health -= hit_points
-            # self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
-            self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+            if self.stages[self.stage] == CHOOSE:
+                self.dialog.update_text(["Player is casting some magic!"])
+                self.actions.update_text([spell.name for spell in self.player.spells])
+                self.actions.update(event,self.player)
+                if not self.player.thinking:
+                    self.stage = 1
+            elif self.stages[self.stage] == ANNOUNCE:
+                self.dialog.update_text([f"Player casts {self.player.spells[self.actions.option - 1].name}"])
+                self.hit_points = self.player.spells[self.actions.option - 1].points
+            elif self.stages[self.stage] == PERFORM:
+                if self.hit_points > 0:
+                    self.dialog.update_text([f"Player healed by {self.hit_points} points"])
+                else:
+                    self.dialog.update_text([f"Enemy damaged by {self.hit_points} points!"])
+            elif self.stages[self.stage] == RESULT:
+                self.player.magic -= self.player.spells[self.actions.option - 1].cost
+                if self.hit_points > 0:
+                    self.player.health += self.hit_points
+                else:
+                    self.enemy.health += self.hit_points
+                self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
+                self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+                self.actions.update_text([ATTACK,MAGIC,DEFEND,RUN])
+                self.stage = 1
+                self.player.status = WAITING
             # self.player.status = WAITING
-        elif self.player.status == DEFENDING:
-            self.dialog.update_text(["Player is defending!"])
-            self.dialog.update_text(["Enemy is attacking!"])
-            hit_points = random.randint(1,5) * self.player.level
-            self.dialog.update_text([f"Player hit by {hit_points}!"])
-            self.player.health -= hit_points
-            self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
-            self.player.status = FIGHTING
         elif self.player.status == RUNNING:
-            self.dialog.update_text(["Player is trying to run from enemy!"])
-            self.enemy.health = 0
-        elif self.player.status == WAITING:
-            self.dialog.update_text(["Enemy is attacking!"])
-            hit_points = random.randint(1,20) * self.enemy.level
-            self.dialog.update_text([f"Player hit by {hit_points}!"])
-            self.player.health -= hit_points
-            self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
-            self.player.status = FIGHTING
+            if self.stages[self.stage] == ANNOUNCE:
+                self.dialog.update_text(["Player is trying to run from enemy!"])
+                self.runaway = random.randint(0,1)
+            elif self.stages[self.stage] == PERFORM:
+                if self.runaway:
+                    self.dialog.update_text([f"Player ran away safely!"])
+                else:
+                    self.dialog.update_text([f"Player can't run away from enemy!"])
+            elif self.stages[self.stage] == RESULT:
+                if self.runaway:
+                    self.enemy.health = 0
+                    self.stage = 1
+                else:
+                    self.player.status = WAITING
+                    self.stage = 1
+        elif self.player.status == WAITING or self.player.status == DEFENDING:
+            if self.stages[self.stage] == ANNOUNCE:
+                self.dialog.update_text(["Enemy is attacking!"])
+                if self.player.status == DEFENDING:
+                    self.hit_points = random.randint(1,5) * self.enemy.level
+                else:
+                    self.hit_points = random.randint(1,20) * self.enemy.level
+            elif self.stages[self.stage] == PERFORM:
+                self.dialog.update_text([f"Player hit by {self.hit_points}!"])
+            elif self.stages[self.stage] == RESULT:
+                self.player.health -= self.hit_points
+                self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
+                self.actions.option = 1
+                self.player.status = FIGHTING
+                self.stage = 1
+            
+
+        if self.player.status is not FIGHTING and self.stage != 0:
+            now = pygame.time.get_ticks()
+            if now - self.player.last_action >= self.delay:
+                self.player.last_action = now
+                if self.stage == len(self.stages) - 1:
+                    self.stage = 1
+                else:
+                    self.stage += 1
 
 class Fader:
 
