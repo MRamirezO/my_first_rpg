@@ -21,7 +21,7 @@ CASTLE = 12
 class Tile(pygame.sprite.Sprite):
     def __init__(self,tile_type,x,y):
         super().__init__() 
-        self.image = pygame.image.load(f"sprites/tiles/{tile_type}.png")
+        self.image = pygame.image.load(f"assets/sprites/tiles/{tile_type}.png")
         self.rect = self.image.get_rect()
         self.rect.topleft = (x,y)
         self.tile_type = tile_type

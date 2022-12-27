@@ -11,7 +11,7 @@ MOVE_DOWN = 4
 class Enemy(pygame.sprite.Sprite):
     def __init__(self,name,position,level=1):
         super().__init__() 
-        self.image = pygame.image.load("sprites/enemy.png")
+        self.image = pygame.image.load("assets/sprites/enemy.png")
         self.name = name
         self.rect = self.image.get_rect()
         self.rect.center= position
@@ -77,7 +77,7 @@ class Enemy(pygame.sprite.Sprite):
 class Boss(Enemy):
     def __init__(self,name,position):
         super().__init__(name,position,10) 
-        self.image = pygame.image.load("sprites/boss.png")
+        self.image = pygame.image.load("assets/sprites/boss.png")
         self.health = 1000
         self.attack = random.randint(500,1000)
         self.defense = random.randint(500,1000)

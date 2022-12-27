@@ -7,7 +7,7 @@ from magic import *
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__() 
-        self.image = pygame.image.load("sprites/player_idle.png")
+        self.image = pygame.image.load("assets/sprites/player_idle.png")
         self.rect = self.image.get_rect()
         self.rect.topleft = (100, 520)
         self.idle_frame_start = time.time()
@@ -47,26 +47,26 @@ class Player(pygame.sprite.Sprite):
             if pressed_keys[K_UP]:
                     if self.direction != "up":
                         self.direction = "up"
-                        self.image = pygame.image.load("sprites/player_back.png")
+                        self.image = pygame.image.load("assets/sprites/player_back.png")
                     self.rect.move_ip(0, -5)
         if self.rect.bottom < SCREEN_HEIGHT and down:
             if pressed_keys[K_DOWN]:
                     if self.direction != "down":
                         self.direction = "down"
-                        self.image = pygame.image.load("sprites/player_idle.png")
+                        self.image = pygame.image.load("assets/sprites/player_idle.png")
                     self.rect.move_ip(0,5)
          
         if self.rect.left > 0 and left:
             if pressed_keys[K_LEFT]:
                 if self.direction != "left":
                     self.direction = "left"
-                    self.image = pygame.image.load("sprites/player_side_1.png")
+                    self.image = pygame.image.load("assets/sprites/player_side_1.png")
                 self.rect.move_ip(-5, 0)
         if self.rect.right < SCREEN_WIDTH and right:        
             if pressed_keys[K_RIGHT]:
                 if self.direction != "right":
                     self.direction = "right"
-                    self.image = pygame.transform.flip(pygame.image.load("sprites/player_side_1.png"), True, False)
+                    self.image = pygame.transform.flip(pygame.image.load("assets/sprites/player_side_1.png"), True, False)
                 self.rect.move_ip(5, 0)
         self.animate()
         
@@ -76,9 +76,9 @@ class Player(pygame.sprite.Sprite):
             if self.direction in ("down","up"):
                 self.image = pygame.transform.flip(self.image, True, False)
             elif self.direction == "left":
-                self.image = pygame.image.load(f"sprites/player_side_{self.walk_frame}.png")
+                self.image = pygame.image.load(f"assets/sprites/player_side_{self.walk_frame}.png")
             elif self.direction == "right":
-                self.image = pygame.transform.flip(pygame.image.load(f"sprites/player_side_{self.walk_frame}.png"), True, False)
+                self.image = pygame.transform.flip(pygame.image.load(f"assets/sprites/player_side_{self.walk_frame}.png"), True, False)
             if self.walk_frame == 1:
                 self.walk_frame = 2
             else:

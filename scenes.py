@@ -60,7 +60,7 @@ class Village(Map):
         )
         self.player = player
         mixer.music.stop()
-        mixer.music.load('music/village.mp3')
+        mixer.music.load('assets/music/village.mp3')
         mixer.music.play(-1)
 
     def draw(self, screen):
@@ -110,7 +110,7 @@ class Castle(Village):
         )
         self.player = player
         mixer.music.stop()
-        mixer.music.load('music/castle.mp3')
+        mixer.music.load('assets/music/castle.mp3')
         mixer.music.play(-1)
 
 class Dungeon(Village):
@@ -137,7 +137,7 @@ class Dungeon(Village):
         )
         self.player = player
         mixer.music.stop()
-        mixer.music.load('music/dungeon.mp3')
+        mixer.music.load('assets/music/dungeon.mp3')
         mixer.music.play(-1)
 
 class WorldMap(Map):
@@ -150,7 +150,7 @@ class WorldMap(Map):
             )
         )
         self.player = player
-        mixer.music.load('music/map_theme.mp3')
+        mixer.music.load('assets/music/map_theme.mp3')
         mixer.music.play(-1)
 
     def draw(self, screen):
@@ -174,12 +174,13 @@ class BattleScene:
         self.enemy = enemy
         self.player = player
         mixer.music.stop()
-        mixer.music.load('music/battle_theme.mp3')
+        mixer.music.load('assets/music/battle_theme.mp3')
         mixer.music.play(-1)
         self.dialog = Dialog(400,60,[f"A wild {self.enemy.name} appeared!"])
         self.actions = Menu(60,500,[ATTACK,MAGIC,DEFEND,RUN])
         self.info = Dialog(1000,600,[f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
         self.enemy_info = Dialog(900,10,[f"Enemy HP: {self.enemy.health}"])
+        self.stage = CHOOSE
 
 
 

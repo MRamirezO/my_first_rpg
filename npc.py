@@ -14,7 +14,7 @@ class NPC(pygame.sprite.Sprite):
     dialog = None
     def __init__(self, name, position, dialogs):
         super().__init__() 
-        self.image = pygame.image.load("sprites/npc_1.png")
+        self.image = pygame.image.load("assets/sprites/npc_1.png")
         self.name = name
         self.rect = self.image.get_rect()
         self.rect.topleft= position

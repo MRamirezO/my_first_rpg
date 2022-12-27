@@ -54,7 +54,7 @@ SCREEN_HEIGHT = 720
 TILE_SIZE = 96
 
 #Setting up Fonts
-FONT_TYPE = "fonts/eightbitmadness.ttf"
+FONT_TYPE = "assets/fonts/eightbitmadness.ttf"
 FONT_SMALL = 60
 FONT_LARGE = 90
 FONT_MEDIUM = 70
