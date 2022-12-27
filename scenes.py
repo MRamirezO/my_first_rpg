@@ -12,22 +12,24 @@ class Map:
     def __init__(self, tile_map):
         self.tileset = []
         self.obstacles = []
-        self.door = None
+        self.doors = []
+        self.enemies = []
         x,y = 0, 0
         for tile_row in tile_map:
             row = []
             for tile_type in tile_row:
-                if tile_type in (GROUND,GREEN_GRASS,WOODEN_FLOOR,CARPET, DOOR):
-                    simple_tile = Tile(tile_type,x,y)
-                    if tile_type == DOOR:
-                        self.door = simple_tile
-                    row.append(simple_tile)
+                if tile_type in (GROUND,GREEN_GRASS,WOODEN_FLOOR,CARPET):
+                    row.append(Tile(tile_type,x,y))
                 elif tile_type in (WALL,WATER,CASTLE_WALL):
                     obstacle = Obstacle(tile_type,x,y)
                     self.obstacles.append(obstacle)
                     row.append(Obstacle(tile_type,x,y))
                 elif tile_type in (LAVA,POISON):
                     row.append(Trap(tile_type,x,y))
+                elif tile_type in (VILLAGE,CAVE,CASTLE):
+                    dest = Portal(tile_type,x,y,tile_type)
+                    self.doors.append(dest)
+                    row.append(dest)
                 x += TILE_SIZE
             y += TILE_SIZE
             x=0
@@ -53,10 +55,11 @@ class Village(Map):
             NPC(
                 "Tony",
                 (500,600),
-                ["Plebes...","Y la mica?"]
+                ["Hey guys...","Where's Mica?", "Aaaaa noooo!"]
             )
         )
         self.player = player
+        mixer.music.stop()
         mixer.music.load('music/village.mp3')
         mixer.music.play(-1)
 
@@ -66,6 +69,8 @@ class Village(Map):
             npc.draw(screen)
             if npc.dialog:
                 npc.dialog.draw(screen)
+        for enemy in self.enemies:
+            enemy.draw(screen)
         self.player.draw(screen)
             
 
@@ -83,6 +88,8 @@ class Village(Map):
                                 break
                         
             self.player.update(self.obstacles)
+            for enemy in self.enemies:
+                enemy.move(self.obstacles)
             
         elif self.player.status == TALKING:
             self.player.talking_to.talk(events)
@@ -90,24 +97,74 @@ class Village(Map):
                 self.player.talking_to = None
                 self.player.status = EXPLORING
 
+class Castle(Village):
+    def __init__(self, player, tile_map):
+        super().__init__(player,tile_map) 
+        self.npc_list = []
+        self.npc_list.append(
+            NPC(
+                "King",
+                (900,100),
+                ["Hello there", "The monsters kidnapped the princess...","Please save my daughter!"]
+            )
+        )
+        self.player = player
+        mixer.music.stop()
+        mixer.music.load('music/castle.mp3')
+        mixer.music.play(-1)
+
+class Dungeon(Village):
+    def __init__(self, player, tile_map):
+        super().__init__(player,tile_map) 
+        self.npc_list = []
+        self.enemies.append(
+            Enemy(
+                "Minion",
+                (500,500),
+            )
+        )
+        self.enemies.append(
+            Enemy(
+                "Minion",
+                (600,500),
+            )
+        )
+        self.enemies.append(
+            Boss(
+                "El chilo",
+                (1000,500),
+            )
+        )
+        self.player = player
+        mixer.music.stop()
+        mixer.music.load('music/dungeon.mp3')
+        mixer.music.play(-1)
+
 class WorldMap(Map):
     def __init__(self, player, tile_map):
         super().__init__(tile_map) 
-        self.E1 = Enemy()
+        self.enemies.append(
+            Enemy(
+                "Minion",
+                (200,100),
+            )
+        )
         self.player = player
         mixer.music.load('music/map_theme.mp3')
         mixer.music.play(-1)
 
     def draw(self, screen):
         super().draw(screen)
-        self.E1.draw(screen)
+        for enemy in self.enemies:
+            enemy.draw(screen)
         self.player.draw(screen)
 
     def update(self,events):
 
         if self.player.status == EXPLORING:                        
             self.player.update(self.obstacles)
-            self.E1.move(self.obstacles)
+            for enemy in self.enemies:
+                enemy.move(self.obstacles)
             
             
         # self.clouds.update(dt, events)
@@ -116,7 +173,7 @@ class BattleScene:
     def __init__(self, player, enemy):
         self.enemy = enemy
         self.player = player
-        #self.background = Background('sprites/malecon.png', [0,0])
+        mixer.music.stop()
         mixer.music.load('music/battle_theme.mp3')
         mixer.music.play(-1)
         self.dialog = Dialog(500,60,[f"A wild {self.enemy.name} appeared!"])

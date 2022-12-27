@@ -9,19 +9,19 @@ MOVE_DOWN = 4
 
 
 class Enemy(pygame.sprite.Sprite):
-    def __init__(self):
+    def __init__(self,name,position,level=1):
         super().__init__() 
         self.image = pygame.image.load("sprites/enemy.png")
-        self.name = "Tony Rapon"
+        self.name = name
         self.rect = self.image.get_rect()
-        self.rect.center= (50, 50)
+        self.rect.center= position
         self.direction = MOVE_RIGHT
         self.idle_frame_start = time.time()
         self.health = 100
         self.turn_time = time.time()
         self.attack = random.randint(1,100)
         self.defense = random.randint(1,100)
-        self.level = 1
+        self.level = level or 1
         self.exp = 20
 
     def move(self,obstacles):
@@ -72,3 +72,12 @@ class Enemy(pygame.sprite.Sprite):
  
     def draw(self, surface):
         surface.blit(self.image, self.rect) 
+
+    
+class Boss(Enemy):
+    def __init__(self,name,position):
+        super().__init__(name,position,10) 
+        self.image = pygame.image.load("sprites/boss.png")
+        self.health = 1000
+        self.attack = random.randint(500,1000)
+        self.defense = random.randint(500,1000)

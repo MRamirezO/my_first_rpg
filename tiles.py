@@ -14,6 +14,9 @@ DOOR = 6
 LAVA = 7
 POISON = 8
 CARPET = 9
+VILLAGE = 10
+CAVE = 11
+CASTLE = 12
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self,tile_type,x,y):
@@ -47,3 +50,9 @@ class Trap(Tile):
     def __init__(self,tile_type,x,y):
         super().__init__(tile_type,x,y) 
         self.damage = 10
+
+class Portal(Tile):
+
+    def __init__(self,tile_type,x,y,destination):
+        super().__init__(tile_type,x,y) 
+        self.destination = destination
