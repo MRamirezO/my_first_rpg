@@ -183,7 +183,7 @@ class BattleScene:
         self.enemy_info = Dialog(900,10,[f"Enemy HP: {self.enemy.health}"])
         self.stages = [CHOOSE,ANNOUNCE,PERFORM,RESULT]
         self.stage = 1
-        self.delay = 3000
+        self.delay = 1000
         self.hit_points = 0
         self.runaway = 0
         self.attack_sound = pygame.mixer.Sound("assets/sfx/attack.wav")
@@ -309,6 +309,26 @@ class MainMenu:
         self.actions = Menu(60,500,[NEW_GAME,CONTINUE])
         self.player = player
         self.player.rect.center = (900,500)
+        
+    def draw(self, screen):
+        self.background.draw(screen)
+        self.dialog.draw(screen)
+        self.actions.draw(screen)
+        self.player.draw(screen)
+
+    def update(self,event):
+        self.actions.update(event,self.player)
+
+class GameOver:
+    def __init__(self,player):
+        mixer.music.stop()
+        self.die_sound = pygame.mixer.Sound("assets/sfx/die.wav")
+        self.dialog = Dialog(400,60,[f"GAME OVER"])
+        self.background = Background('assets/sprites/bg_grass.png',(0,0))
+        self.actions = Menu(60,500,[CONTINUE,EXIT])
+        self.player = player
+        self.player.rect.center = (900,500)
+        self.die_sound.play()
         
     def draw(self, screen):
         self.background.draw(screen)

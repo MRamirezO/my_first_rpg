@@ -22,6 +22,8 @@ village_scene = None
 
 world_scene = None
 
+game_over = None
+
 menu_scene = MainMenu(P1)
 
 current_scene = menu_scene
@@ -34,8 +36,11 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
-    if P1.status == EXPLORING and game_status == MENU:
-        del(menu_scene)
+    if P1.status == EXPLORING and (game_status == MENU or game_status == GAME_OVER):
+        if game_status == MENU:
+            del(menu_scene)
+        elif game_status == GAME_OVER:
+            del(game_over)
         world_scene = WorldMap(P1, WORLD_MAP)
         current_scene = world_scene
         game_status = WORLD_MAP
@@ -97,9 +102,10 @@ while True:
             
     elif game_status == BATTLE:
         if P1.health <= 0:
+            P1.status = DEAD
             game_status = GAME_OVER
-            pygame.quit()
-            sys.exit()
+            game_over = GameOver(P1)
+            current_scene = game_over
         elif current_scene.enemy.health <= 0:
             if P1.status is not RUNNING:
                 P1.get_experience(current_scene.enemy)
@@ -108,6 +114,8 @@ while True:
             del(battle_scene)
             world_scene = WorldMap(P1, WORLD_MAP)
             current_scene = world_scene
+        
+
      
     current_scene.update(events)           
     current_scene.draw(screen)

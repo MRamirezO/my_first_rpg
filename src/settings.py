@@ -27,10 +27,12 @@ CASTING = "CASTING"
 DEFENDING = "DEFENDING"
 RUNNING = "RUNNING"
 WAITING = "WAITING"
+DEAD = "DEAD"
 
 # Menu options
 NEW_GAME = "New game"
 CONTINUE = "Continue"
+EXIT = "Exit"
 
 # Battle Options
 ATTACK = "Attack"

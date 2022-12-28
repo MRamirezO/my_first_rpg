@@ -101,4 +101,9 @@ class Menu(Dialog):
                             player.status = EXPLORING
                         elif self.options[self.option - 1] == CONTINUE:
                             player.status = EXPLORING
+                    elif player.status == DEAD:
+                        if self.options[self.option - 1] == CONTINUE:
+                            player.status = EXPLORING
+                        elif self.options[self.option - 1] == EXIT:
+                            player.status = EXPLORING
                     #self.option = 1
