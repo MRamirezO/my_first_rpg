@@ -182,11 +182,17 @@ class BattleScene:
         self.enemy_info = Dialog(900,10,[f"Enemy HP: {self.enemy.health}"])
         self.stages = [CHOOSE,ANNOUNCE,PERFORM,RESULT]
         self.stage = 1
-        self.delay = 3000   
-        self.hit_points = 0 
+        self.delay = 3000
+        self.hit_points = 0
         self.runaway = 0
-
-
+        self.attack_sound = pygame.mixer.Sound("assets/sfx/attack.wav")
+        self.magic_sound = pygame.mixer.Sound("assets/sfx/magic.wav")
+        self.win_sound = pygame.mixer.Sound("assets/sfx/win.wav")
+        self.die_sound = pygame.mixer.Sound("assets/sfx/die.wav")
+        self.levelup_sound = pygame.mixer.Sound("assets/sfx/level_up.wav")
+        self.damage_sound = pygame.mixer.Sound("assets/sfx/damage.wav")
+        self.run_sound = pygame.mixer.Sound("assets/sfx/entry.wav")
+        
 
     def draw(self, screen):
         screen.fill(pygame.Color('lightblue'))
@@ -209,6 +215,7 @@ class BattleScene:
             elif self.stages[self.stage] == PERFORM:
                 self.dialog.update_text([f"Enemy hit by {self.hit_points}!"])
             elif self.stages[self.stage] == RESULT:
+                self.attack_sound.play()
                 self.enemy.health -= self.hit_points
                 self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
                 self.player.attack = 20
@@ -230,11 +237,17 @@ class BattleScene:
                 else:
                     self.dialog.update_text([f"Enemy damaged by {self.hit_points} points!"])
             elif self.stages[self.stage] == RESULT:
+                self.magic_sound.play()
                 self.player.magic -= self.player.spells[self.actions.option - 1].cost
                 if self.hit_points > 0:
                     self.player.health += self.hit_points
                 else:
                     self.enemy.health += self.hit_points
+                if self.enemy.health <= 0:
+                    self.dialog.update_text([f"{self.enemy.name} defeated!"])
+                    mixer.music.stop()
+                    self.win_sound.play()
+                    pygame.time.delay(5000)
                 self.enemy_info.update_text([f"Enemy HP: {self.enemy.health}"])
                 self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
                 self.actions.update_text([ATTACK,MAGIC,DEFEND,RUN])
@@ -254,6 +267,7 @@ class BattleScene:
                 if self.runaway:
                     self.enemy.health = 0
                     self.stage = 1
+                    self.run_sound.play()
                 else:
                     self.player.status = WAITING
                     self.stage = 1
@@ -267,6 +281,7 @@ class BattleScene:
             elif self.stages[self.stage] == PERFORM:
                 self.dialog.update_text([f"Player hit by {self.hit_points}!"])
             elif self.stages[self.stage] == RESULT:
+                self.damage_sound.play()
                 self.player.health -= self.hit_points
                 self.info.update_text([f"Level: {self.player.level}",f"HP: {self.player.health}",f"MP: {self.player.magic}"])
                 self.actions.option = 1
