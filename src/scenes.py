@@ -150,6 +150,7 @@ class WorldMap(Map):
             )
         )
         self.player = player
+        self.player.rect.center = (100, 520)
         mixer.music.load('assets/music/map_theme.mp3')
         mixer.music.play(-1)
 
@@ -297,6 +298,27 @@ class BattleScene:
                     self.stage = 1
                 else:
                     self.stage += 1
+
+class MainMenu:
+    def __init__(self,player):
+        mixer.music.stop()
+        mixer.music.load('assets/music/menu.mp3')
+        mixer.music.play(-1)
+        self.dialog = Dialog(400,60,[f"Welcome to my first RPG!"])
+        self.background = Background('assets/sprites/bg_grass.png',(0,0))
+        self.actions = Menu(60,500,[NEW_GAME,CONTINUE])
+        self.player = player
+        self.player.rect.center = (900,500)
+        
+    def draw(self, screen):
+        self.background.draw(screen)
+        self.dialog.draw(screen)
+        self.actions.draw(screen)
+        self.player.draw(screen)
+
+    def update(self,event):
+        self.actions.update(event,self.player)
+        
 
 class Fader:
 

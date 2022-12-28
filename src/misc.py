@@ -96,4 +96,9 @@ class Menu(Dialog):
                             player.thinking = False
                             player.status = FIGHTING
                             self.update_text([ATTACK,MAGIC,DEFEND,RUN])
+                    elif player.status == BEGINNING:
+                        if self.options[self.option - 1] == NEW_GAME:
+                            player.status = EXPLORING
+                        elif self.options[self.option - 1] == CONTINUE:
+                            player.status = EXPLORING
                     #self.option = 1

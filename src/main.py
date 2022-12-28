@@ -20,11 +20,13 @@ battle_scene = None
 
 village_scene = None
 
-world_scene = WorldMap(P1, WORLD_MAP)
+world_scene = None
 
-current_scene = world_scene
+menu_scene = MainMenu(P1)
 
-game_status = WORLD_MAP
+current_scene = menu_scene
+
+game_status = MENU
 
 while True:
     events = pygame.event.get()
@@ -32,6 +34,11 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+    if P1.status == EXPLORING and game_status == MENU:
+        del(menu_scene)
+        world_scene = WorldMap(P1, WORLD_MAP)
+        current_scene = world_scene
+        game_status = WORLD_MAP
 
     if game_status == WORLD_MAP:
         for door in current_scene.doors:

@@ -22,7 +22,7 @@ class Player(pygame.sprite.Sprite):
         self.next_level = 10
         self.exp = 0
         self.talking_to = None
-        self.status = EXPLORING
+        self.status = BEGINNING
         self.thinking = False
         self.last_action = 0
  
